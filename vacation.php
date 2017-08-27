@@ -73,7 +73,11 @@ class vacation extends rcube_plugin
 		$this->rc->output->send('plugin');
 	}
 
-	protected function get_timestamp($date)
+	/*
+	 * Added $type to distinguish start and end date. Start date is with time 00:00:00 and end date is with time 23:59:59.
+	 * Also changed gmmktime to mktime to get rid of timezone offset - postfixadmin vacation plugin is not using it.
+	 */
+	protected function get_timestamp($date, $type)
 	{
 		if ($date === '') {
 			return null;
@@ -83,7 +87,11 @@ class vacation extends rcube_plugin
 			{
 				return FALSE;
 			}
-			return gmmktime(0,0,0, $d['month'], $d['day'], $d['year']);
+			if ($type == 'end') {
+				return mktime(23,59,59, $d['month'], $d['day'], $d['year']);
+			} else {
+				return mktime(0,0,0, $d['month'], $d['day'], $d['year']);
+			}
 		}
 	}
 
@@ -314,14 +322,16 @@ class vacation extends rcube_plugin
 
 		if ($this->rc->config->get('vacation_gui_vacationdate', FALSE))
 		{
-			$d_start_time = $this->get_timestamp(rcube_utils::get_input_value('_vacationstart', rcube_utils::INPUT_POST));
+			/* Added 'start' parameter to get_timestamp */
+			$d_start_time = $this->get_timestamp(rcube_utils::get_input_value('_vacationstart', rcube_utils::INPUT_POST), 'start');
 			if ($d_start_time === FALSE)
 			{
 				$this->rc->output->command('display_message', $this->gettext('vacationinvalidstartdate'), 'error');
 				return FALSE;
 			}
 
-			$d_end_time = $this->get_timestamp(rcube_utils::get_input_value('_vacationend', rcube_utils::INPUT_POST));
+			/* Added 'end' parameter to get_timestamp */
+			$d_end_time = $this->get_timestamp(rcube_utils::get_input_value('_vacationend', rcube_utils::INPUT_POST), 'end');
 			if ($d_end_time === FALSE)
 			{
 				$this->rc->output->command('display_message', $this->gettext('vacationinvalidenddate'), 'error');
