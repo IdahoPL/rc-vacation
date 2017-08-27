@@ -5,9 +5,10 @@ $labels['vacation'] = 'Autoodpowiedź';
 $labels['vacationenable'] = 'Włączona';
 $labels['vacationsubject'] = 'Temat:';
 $labels['vacationmessage'] = 'Treść:';
-$labels['vacationforwarder'] = 'Forward address:';
+$labels['vacationforwarder'] = 'Adres przekierowania:';
 $labels['vacationstart'] = 'Od kiedy:';
 $labels['vacationend'] = 'Do kiedy:';
+$labels['vacationkeepcopyininbox'] = 'Zachowaj kopię odpowiedzi';
 
 $messages = array();
 $messages['vacationinvalidstartdate'] = 'Proszę wybrać prawidłową datę początkową.';
